@@ -4,6 +4,8 @@
 @attribute [StreamRendering(true)]
 @rendermode InteractiveServer
 @inject WeatherForecastService ForecastService
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
 
 <PageTitle>Weather</PageTitle>
 <h1>Weather</h1>
@@ -26,10 +28,13 @@ else
 }
 
 @code {
-    private WeatherForecast[]? forecasts;
+    private GridDevExtremeDataSource<WeatherForecast>? forecasts;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await ForecastService.GetForecastAsync(DateOnly.FromDateTime(DateTime.Now));
+        // forecasts = await ForecastService.GetForecastAsync(DateOnly.FromDateTime(DateTime.Now));
+
+        var uri = NavigationManager.ToAbsoluteUri("api/WeatherForecast/grid");
+        forecasts = new GridDevExtremeDataSource<WeatherForecast>(HttpClient, uri);
     }
 }
